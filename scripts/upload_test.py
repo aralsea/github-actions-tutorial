@@ -91,12 +91,6 @@ def main():
         creds=creds,
     )
 
-    update_file(
-        new_file_name="test2.py",
-        file_id="1NT9JZy6A6Bqq58BedMfAXVIlcVIf0HZq",
-        creds=creds,
-    )
-
 
 if __name__ == "__main__":
     main()
