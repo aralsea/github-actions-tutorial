@@ -32,7 +32,7 @@ jobs:
 
       - name: setup gdrive
         run: |
-          apt-get update && apt-get install ca-certificates
+          sudo apt-get update && sudo apt-get install ca-certificates
           go install github.com/prasmussen/gdrive@latest
           export PATH=$(go env GOPATH)/bin:$PATH
           echo "PATH=$PATH" >> $GITHUB_ENV
