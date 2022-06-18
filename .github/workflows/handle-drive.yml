@@ -12,11 +12,11 @@ jobs:
         uses: actions/setup-go@v3 #GOBINのPATHへの追加までやってくれる?
       - run: go version
       - run: |
-          echo ${go env GOPATH}
-      - run: ls -a ${go env GOPATH}
+          echo $(go env GOPATH})
+      - run: ls -a $(go env GOPATH)
       - name: setup gdrive
         run: |
           go install github.com/prasmussen/gdrive@latest
-          ${go env GOPATH}/bin/gdrive help
+          $(go env GOPATH)/bin/gdrive help
       - name: checkout repo content
         uses: actions/checkout@v3
