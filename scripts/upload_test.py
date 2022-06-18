@@ -130,7 +130,6 @@ def file_name2ids(
 
 def main():
     print(f"GOOGLE_GHA_CREDS_PATH={GOOGLE_GHA_CREDS_PATH}")
-
     creds, project = google.auth.default()
     """sa_creds = service_account.Credentials.from_service_account_file(
         GOOGLE_GHA_CREDS_PATH
