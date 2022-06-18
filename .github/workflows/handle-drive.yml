@@ -4,8 +4,6 @@ jobs:
   update-test-directory:
     runs-on: ubuntu-latest
     steps:
-      - name: checkout repo content
-        uses: actions/checkout@v3
       - name: setup python
         uses: actions/setup-python@v2
         with:
@@ -13,10 +11,14 @@ jobs:
       - name: setup golang
         uses: actions/setup-go@v3 #GOBINのPATHへの追加までやってくれる?
       - run: go version
-      - run: echo $GOPATH
+      - run: |
+        echo $GOPATH
+        echo $GOROOT
+        echo $GOBIN
       - run: pwd
-      - run: ls -a $GOPATH/bin
       - name: setup gdrive
         run: |
           go install github.com/prasmussen/gdrive@latest
           gdrive help
+      - name: checkout repo content
+        uses: actions/checkout@v3
