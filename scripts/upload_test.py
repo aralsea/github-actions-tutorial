@@ -3,11 +3,8 @@ from __future__ import print_function
 import os.path
 import shlex
 import subprocess
-from re import sub
-from sys import api_version
 from typing import List, Optional
 
-from cachetools import FIFOCache
 from google.auth.transport.requests import Request
 from google.oauth2 import service_account
 from google.oauth2.credentials import Credentials
@@ -15,7 +12,6 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaFileUpload
-from yaml import load
 
 # If modifying these scopes, delete the file token.json.
 # やりたい処理ごとに権限を設定
