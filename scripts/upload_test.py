@@ -135,6 +135,7 @@ def main():
     """sa_creds = service_account.Credentials.from_service_account_file(
         GOOGLE_GHA_CREDS_PATH
     )"""
+
     scoped_creds = creds.with_scopes(SCOPES)
 
     print(file_name2ids(file_name="test", creds=scoped_creds))
