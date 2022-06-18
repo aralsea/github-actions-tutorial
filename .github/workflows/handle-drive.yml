@@ -13,9 +13,9 @@ jobs:
       - name: setup golang
         uses: actions/setup-go@v3 #GOBINのPATHへの追加までやってくれる?
       - run: go version
-      - run: echo $PATH
+      - run: echo $GOPATH
       - run: pwd
-      - run: ls -a ~/go/bin
+      - run: ls -a $GOPATH/bin
       - name: setup gdrive
         run: |
           go install github.com/prasmussen/gdrive@latest
