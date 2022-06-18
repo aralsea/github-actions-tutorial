@@ -34,10 +34,10 @@ jobs:
         run: |
           apt-get update && apt-get install ca-certificates
           go install github.com/prasmussen/gdrive@latest
+          export PATH=$(go env GOPATH)/bin:$PATH
+          echo "PATH=$PATH" >> $GITHUB_ENV
 
       - name: run my script
-        run: |
-          export PATH=$(go env GOPATH)/bin:PATH
-          python ${{ github.workspace }}/scripts/upload_test.py
+        run: python ${{ github.workspace }}/scripts/upload_test.py
 
 
