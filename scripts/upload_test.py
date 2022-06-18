@@ -1,18 +1,28 @@
 from __future__ import print_function
 
 import os.path
+import shlex
+import subprocess
+from re import sub
+from sys import api_version
+from typing import List, Optional
 
+from cachetools import FIFOCache
 from google.auth.transport.requests import Request
+from google.oauth2 import service_account
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaFileUpload
+from yaml import load
 
 # If modifying these scopes, delete the file token.json.
 # やりたい処理ごとに権限を設定
 SCOPES = ["https://www.googleapis.com/auth/drive"]
-FOLDER_ID_OF_JPXINPUT = "1blE4SpoAM-SGhXclosOYVqEwzojvm0x6"
+SHARE_FOLDER_ID = "1blE4SpoAM-SGhXclosOYVqEwzojvm0x6"
+FOLDER_ID_OF_INNSHI = "1vIMDDXPA4InooG-4LzqCc3UDR4FgRva_"
+FOLDER_ID_OF_JPXSRC = "1gOZ_kqSEn0jnAYa9GTnfdrFyW92j1jDs"
 TEST_FILE_NAME = "hello_world.py"
 
 
@@ -20,8 +30,6 @@ def create_file(file_name: str, folder_id: str, creds) -> None:
     local_file_path = "../test/" + file_name
     try:
         service = build("drive", "v3", credentials=creds)
-
-        # colab/JPX/input
         file_metadata = {"name": file_name, "parents": [folder_id]}
         media = MediaFileUpload(local_file_path, mimetype="text/x-python")
         file = (
@@ -64,32 +72,89 @@ def update_file(new_file_name: str, file_id: str, creds) -> None:
         return None
 
 
-def main():
-    """Shows basic usage of the Drive v3 API.
-    Prints the names and ids of the first 10 files the user has access to.
-    """
-    creds = None
-    # The file token.json stores the user's access and refresh tokens, and is
-    # created automatically when the authorization flow completes for the first
-    # time.
-    if os.path.exists("token.json"):
-        creds = Credentials.from_authorized_user_file("token.json", SCOPES)
-    # If there are no (valid) credentials available, let the user log in.
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-        else:
-            flow = InstalledAppFlow.from_client_secrets_file("credentials.json", SCOPES)
-            creds = flow.run_local_server(port=0)
-        # Save the credentials for the next run
-        with open("token.json", "w") as token:
-            token.write(creds.to_json())
+def upload_directory_via_gdrive(
+    local_directory_path: str, remote_parent_directory_id: str
+):
+    cmd = f"gdrive --service-account credential.json upload -r -p {remote_parent_directory_id} {local_directory_path}"
+    tokens = shlex.split(cmd)
+    subprocess.run(tokens)
 
-    create_file(
-        file_name=TEST_FILE_NAME,
-        folder_id=FOLDER_ID_OF_JPXINPUT,
+
+# 自分がオーナーであるものしか削除できない
+def delete_directory_via_gdrive(remote_directory_id: str):
+    cmd = f"gdrive --service-account credential.json delete -r {remote_directory_id}"
+    tokens = shlex.split(cmd)
+    subprocess.run(tokens)
+
+
+def update_directory(local_directory_name: str, remote_parent_directory_id: str, creds):
+    local_directory_path = "../" + local_directory_name
+    remote_directory_ids = file_name2ids(
+        file_name=local_directory_name,
+        remote_parent_directory_id=remote_parent_directory_id,
         creds=creds,
     )
+
+    for remote_directory_id in remote_directory_ids:
+        delete_directory_via_gdrive(remote_directory_id=remote_directory_id)
+    upload_directory_via_gdrive(
+        local_directory_path=local_directory_path,
+        remote_parent_directory_id=remote_parent_directory_id,
+    )
+
+
+def file_name2ids(
+    file_name: str,
+    creds,
+    remote_parent_directory_id: Optional[str] = None,
+) -> List[str]:
+    drive_service = build("drive", "v3", credentials=creds)
+    query = "trashed = False"
+    if remote_parent_directory_id:
+        query += f" and parents in {remote_parent_directory_id}"
+    response = (
+        drive_service.files()
+        .list(
+            supportsAllDrives=True,
+            includeItemsFromAllDrives=True,
+            fields="nextPageToken, files(id, name)",
+        )
+        .execute()
+    )
+    files = response.get("files", [])  # 辞書のリスト
+
+    results: List[str] = []
+    for file in files:
+        if file.get("name") == file_name:
+            results.append(file.get("id"))
+
+    return results
+
+
+def main():
+    sa_creds = service_account.Credentials.from_service_account_file(
+        "credentials2.json"
+    )
+    scoped_creds = sa_creds.with_scopes(SCOPES)
+
+    print(file_name2ids(file_name="test", creds=scoped_creds))
+
+    GitHub_actions_tutorial_id = file_name2ids(
+        file_name="GitHub_actions_tutorial", creds=scoped_creds
+    )[0]
+
+    update_directory(
+        local_directory_name="test",
+        remote_parent_directory_id=GitHub_actions_tutorial_id,
+        creds=scoped_creds,
+    )
+    """create_file(
+        file_name=TEST_FILE_NAME,
+        folder_id=FOLDER_ID_OF_JPXSRC,
+        creds=scoped_creds,
+    )"""
+
+    """update_file("test2.py", "1-DKP11Xmdb5vwcQ-rkRo6Ak0xnwH9KAC", scoped_creds)"""
 
 
 if __name__ == "__main__":
