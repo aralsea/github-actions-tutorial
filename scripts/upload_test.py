@@ -5,6 +5,7 @@ import shlex
 import subprocess
 from typing import List, Optional
 
+import google.auth
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
@@ -129,10 +130,12 @@ def file_name2ids(
 
 def main():
     print(f"GOOGLE_GHA_CREDS_PATH={GOOGLE_GHA_CREDS_PATH}")
-    sa_creds = service_account.Credentials.from_service_account_file(
+
+    creds, project = google.auth.default()
+    """sa_creds = service_account.Credentials.from_service_account_file(
         GOOGLE_GHA_CREDS_PATH
-    )
-    scoped_creds = sa_creds.with_scopes(SCOPES)
+    )"""
+    scoped_creds = creds.with_scopes(SCOPES)
 
     print(file_name2ids(file_name="test", creds=scoped_creds))
 
