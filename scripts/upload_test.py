@@ -24,6 +24,9 @@ SHARE_FOLDER_ID = "1blE4SpoAM-SGhXclosOYVqEwzojvm0x6"
 FOLDER_ID_OF_INNSHI = "1vIMDDXPA4InooG-4LzqCc3UDR4FgRva_"
 FOLDER_ID_OF_JPXSRC = "1gOZ_kqSEn0jnAYa9GTnfdrFyW92j1jDs"
 TEST_FILE_NAME = "hello_world.py"
+GOOGLE_GHA_CREDS_PATH = os.environ.get(
+    "GOOGLE_GHA_CREDS_PATH"
+)  # googleとgithubをOIDCで連携したときに得られる認証用jsonファイルの場所
 
 
 def create_file(file_name: str, folder_id: str, creds) -> None:
@@ -133,7 +136,7 @@ def file_name2ids(
 
 def main():
     sa_creds = service_account.Credentials.from_service_account_file(
-        "credentials2.json"
+        GOOGLE_GHA_CREDS_PATH
     )
     scoped_creds = sa_creds.with_scopes(SCOPES)
 
