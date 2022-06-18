@@ -2,19 +2,38 @@ name: handle-drive
 on: [push]
 jobs:
   update-test-directory:
+
+    permissions:
+      contents: "read"
+      id-token: "write"
+
     runs-on: ubuntu-latest
+
     steps:
+      - name: checkout repo content
+        uses: actions/checkout@v3
+
       - name: setup python
         uses: actions/setup-python@v2
         with:
           python-version: 3.9 #install the python needed
+
       - name: setup golang
         uses: actions/setup-go@v3
+
+      - id: "auth"
+        name: "Authenticate to Google Cloud"
+        uses: "google-github-actions/auth@v0"
+        with:
+          # 外部から切り替えできるように secret にしてある.
+          workload_identity_provider: projects/650674712826/locations/global/workloadIdentityPools/github-actions/providers/gha-provider
+          service_account: colab-github-actions@colab-github-actions.iam.gserviceaccount.com
+
       - name: setup gdrive
         run: |
           go install github.com/prasmussen/gdrive@latest
           export PATH=$(go env GOPATH)/bin:PATH
           echo $PATH
           gdrive help
-      - name: checkout repo content
-        uses: actions/checkout@v3
+
+
