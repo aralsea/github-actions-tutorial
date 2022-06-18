@@ -13,7 +13,8 @@ jobs:
       - name: setup gdrive
         run: |
           go install github.com/prasmussen/gdrive@latest
-          export PATH=$(go env GOPATH):PATH
+          export PATH=$(go env GOPATH)/bin:PATH
+          echo $PATH
           gdrive help
       - name: checkout repo content
         uses: actions/checkout@v3
