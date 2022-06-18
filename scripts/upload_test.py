@@ -136,8 +136,8 @@ def main():
         GOOGLE_GHA_CREDS_PATH
     )"""
 
-    print(creds)
-    print(project)
+    print(f"creds={creds}")
+    print(f"project={project}")
     scoped_creds = creds.with_scopes(SCOPES)
 
     print(file_name2ids(file_name="test", creds=scoped_creds))
