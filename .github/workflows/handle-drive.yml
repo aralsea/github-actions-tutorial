@@ -30,13 +30,11 @@ jobs:
           workload_identity_provider: projects/650674712826/locations/global/workloadIdentityPools/github-actions/providers/gha-provider
           service_account: colab-github-actions@colab-github-actions.iam.gserviceaccount.com
 
-      - run: cat $GOOGLE_GHA_CREDS_PATH
       - name: setup gdrive
         run: |
           go install github.com/prasmussen/gdrive@latest
           export PATH=$(go env GOPATH)/bin:PATH
-          echo $PATH
-          gdrive help
+          echo "PATH=$PATH" >> $GITHUB_ENV
 
       - name: run my script
         run: python ${{ github.workspace }}/scripts/upload_test.py
