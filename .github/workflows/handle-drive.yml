@@ -37,6 +37,6 @@ jobs:
           gdrive help
 
       - name: run my script
-        run: python ${{ github.workspace }}/script/upload_test.py
+        run: python ${{ github.workspace }}/scripts/upload_test.py
 
 
