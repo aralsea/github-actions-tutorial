@@ -36,14 +36,8 @@ jobs:
 
       - name: setup gdrive
         run: |
-          pwd
           wget https://github.com/prasmussen/gdrive/releases/download/2.1.1/gdrive_2.1.1_linux_amd64.tar.gz
-          echo $PATH
-          go install github.com/prasmussen/gdrive@latest
-          mkdir -p ~/.gdrive/
-          cp $GOOGLE_APPLICATION_CREDENTIALS ~/.gdrive/credential.json
-          export PATH=$(go env GOPATH)/bin:$PATH
-          echo "PATH=$PATH" >> $GITHUB_ENV
+          tar -zxvf gdrive_2.1.1_linux_amd64.tar.gz -C /usr/local/bin
 
       - name: run my script
         run: |
