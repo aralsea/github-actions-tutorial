@@ -20,7 +20,7 @@ GOOGLE_APPLICATION_CREDENTIALS = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS"
 
 
 def create_file(file_name: str, folder_id: str, creds) -> None:
-    local_file_path = "../test/" + file_name
+    local_file_path = "${{ github.workspace }}/test/" + file_name
     try:
         service = build("drive", "v3", credentials=creds)
         file_metadata = {"name": file_name, "parents": [folder_id]}
@@ -37,7 +37,7 @@ def create_file(file_name: str, folder_id: str, creds) -> None:
 
 
 def update_file(new_file_name: str, file_id: str, creds) -> None:
-    new_file_path = "../test/" + new_file_name
+    new_file_path = "${{ github.workspace }}/test/" + new_file_name
     try:
         # First retrieve the file from the API.
         service = build("drive", "v3", credentials=creds)
@@ -81,7 +81,7 @@ def delete_directory_via_gdrive(remote_directory_id: str):
 
 
 def update_directory(local_directory_name: str, remote_parent_directory_id: str, creds):
-    local_directory_path = "../" + local_directory_name
+    local_directory_path = "${{ github.workspace }}/" + local_directory_name
     remote_directory_ids = file_name2ids(
         file_name=local_directory_name,
         remote_parent_directory_id=remote_parent_directory_id,
