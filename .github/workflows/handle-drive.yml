@@ -36,14 +36,9 @@ jobs:
         run: |
           sudo apt-get install musl-dev
           wget https://github.com/prasmussen/gdrive/releases/download/2.1.1/gdrive_2.1.1_linux_amd64.tar.gz
-          mkdir -p $HOME/.local/bin
           tar -zxvf gdrive_2.1.1_linux_amd64.tar.gz -C $HOME/.local/bin
-          echo "which gdrive=$(which gdrive)"
-          file $(which gdrive)
           mkdir -p ~/.gdrive/
           cp $GOOGLE_APPLICATION_CREDENTIALS ~/.gdrive/credential.json
-          ls -l $HOME/.local/bin
-          sudo $HOME/.local/bin/gdrive help
 
 
       - name: run my script
