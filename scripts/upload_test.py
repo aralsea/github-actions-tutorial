@@ -14,13 +14,9 @@ from googleapiclient.http import MediaFileUpload
 # If modifying these scopes, delete the file token.json.
 # やりたい処理ごとに権限を設定
 SCOPES = ["https://www.googleapis.com/auth/drive"]
-SHARE_FOLDER_ID = "1blE4SpoAM-SGhXclosOYVqEwzojvm0x6"
-FOLDER_ID_OF_INNSHI = "1vIMDDXPA4InooG-4LzqCc3UDR4FgRva_"
 FOLDER_ID_OF_JPXSRC = "1gOZ_kqSEn0jnAYa9GTnfdrFyW92j1jDs"
 TEST_FILE_NAME = "hello_world.py"
-GOOGLE_GHA_CREDS_PATH = os.environ.get(
-    "GOOGLE_GHA_CREDS_PATH"
-)  # googleとgithubをOIDCで連携したときに得られる認証用jsonファイルの場所
+GOOGLE_APPLICATION_CREDENTIALS = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")
 
 
 def create_file(file_name: str, folder_id: str, creds) -> None:
@@ -129,14 +125,11 @@ def file_name2ids(
 
 
 def main():
-    print(f"GOOGLE_GHA_CREDS_PATH={GOOGLE_GHA_CREDS_PATH}")
-    creds, project = google.auth.default()
-    """sa_creds = service_account.Credentials.from_service_account_file(
-        GOOGLE_GHA_CREDS_PATH
-    )"""
+    # creds, project = google.auth.default()
+    creds = service_account.Credentials.from_service_account_file(
+        "credentials2.json"
+    )
 
-    print(f"creds={creds}")
-    print(f"project={project}")
     scoped_creds = creds.with_scopes(SCOPES)
 
     print(file_name2ids(file_name="test", creds=scoped_creds))
