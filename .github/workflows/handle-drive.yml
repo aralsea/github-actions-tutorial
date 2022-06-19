@@ -36,9 +36,9 @@ jobs:
         run: |
           wget https://github.com/prasmussen/gdrive/releases/download/2.1.1/gdrive_2.1.1_linux_amd64.tar.gz
           tar -zxvf gdrive_2.1.1_linux_amd64.tar.gz -C /usr/local/bin/
-          ls /usr/local/bin
+          ls -l /usr/local/bin
           echo $PATH
-          where gdrive
+
       - name: run my script
         run: |
           echo "GITHUB_WORKSPACE=${{ github.workspace }}" >> $GITHUB_ENV
