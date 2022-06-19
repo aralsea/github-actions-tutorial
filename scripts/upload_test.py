@@ -17,7 +17,7 @@ SCOPES = ["https://www.googleapis.com/auth/drive"]
 FOLDER_ID_OF_JPXSRC = "1gOZ_kqSEn0jnAYa9GTnfdrFyW92j1jDs"
 TEST_FILE_NAME = "hello_world.py"
 GOOGLE_APPLICATION_CREDENTIALS = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")
-GITHUB_WORKSPACE = os.environ.get("github.workspace")
+GITHUB_WORKSPACE = os.environ.get("GITHUB_WORKSPACE")
 
 
 def create_file(file_name: str, folder_id: str, creds) -> None:
