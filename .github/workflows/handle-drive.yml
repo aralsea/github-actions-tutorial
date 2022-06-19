@@ -38,7 +38,7 @@ jobs:
 
       - name: run my script
         run: |
-          export GITHUB_WORKSPACE=${{ github.workspace }}
+          echo "GITHUB_WORKSPACE=${{ github.workspace }}" >> $GITHUB_ENV
           python ${{ github.workspace }}/scripts/upload_test.py
 
 

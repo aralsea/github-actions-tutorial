@@ -134,6 +134,7 @@ def main():
     scoped_creds = creds.with_scopes(SCOPES)
 
     print(file_name2ids(file_name="test", creds=scoped_creds))
+    print(f"GITHUB_WORKSPACE={GITHUB_WORKSPACE}")
 
     GitHub_actions_tutorial_id = file_name2ids(
         file_name="GitHub_actions_tutorial", creds=scoped_creds
