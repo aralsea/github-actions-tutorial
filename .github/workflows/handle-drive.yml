@@ -38,6 +38,7 @@ jobs:
           tar -zxvf gdrive_2.1.1_linux_amd64.tar.gz -C /usr/local/bin/
           file /usr/local/bin/gdrive
           echo $PATH
+          echo "which gdrive=$(which gdrive)"
           mkdir -p ~/.gdrive/
           cp $GOOGLE_APPLICATION_CREDENTIALS ~/.gdrive/credential.json
 
