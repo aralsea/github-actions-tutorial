@@ -17,6 +17,7 @@ SCOPES = ["https://www.googleapis.com/auth/drive"]
 FOLDER_ID_OF_JPXSRC = "1gOZ_kqSEn0jnAYa9GTnfdrFyW92j1jDs"
 TEST_FILE_NAME = "hello_world.py"
 GOOGLE_APPLICATION_CREDENTIALS = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")
+GITHUB_WORKSPACE = os.environ.get("github.workspace")
 
 
 def create_file(file_name: str, folder_id: str, creds) -> None:
@@ -81,7 +82,7 @@ def delete_directory_via_gdrive(remote_directory_id: str):
 
 
 def update_directory(local_directory_name: str, remote_parent_directory_id: str, creds):
-    local_directory_path = "${{ github.workspace }}/" + local_directory_name
+    local_directory_path = f"{GITHUB_WORKSPACE}/" + local_directory_name
     remote_directory_ids = file_name2ids(
         file_name=local_directory_name,
         remote_parent_directory_id=remote_parent_directory_id,
