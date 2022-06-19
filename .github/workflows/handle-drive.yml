@@ -13,6 +13,12 @@ jobs:
       - name: checkout repo content
         uses: actions/checkout@v3
 
+      - name: check architecture
+        run: |
+          uname -m
+          arch
+          gcc -v
+
       - name: setup python
         uses: actions/setup-python@v2
         with:

@@ -8,13 +8,12 @@ from typing import List, Optional
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 
-# If modifying these scopes, delete the file token.json.
-# やりたい処理ごとに権限を設定
+# このディレクトリにあるcredentials2.jsonをgithubシークレットにGOOGLE_CREDENTIALSという名前で登録せよ．
 SCOPES = ["https://www.googleapis.com/auth/drive"]
 GOOGLE_APPLICATION_CREDENTIALS = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")
 GITHUB_WORKSPACE = os.environ.get("GITHUB_WORKSPACE")
 
-
+# gdirveコマンドを読んでローカルの指定したファイルorディレクトリを指定したdriveのディレクトリ内にアップロード
 def upload_directory_via_gdrive(
     local_directory_path: str, remote_parent_directory_id: str
 ) -> None:
@@ -23,13 +22,14 @@ def upload_directory_via_gdrive(
     subprocess.run(tokens)
 
 
-# 自分がオーナーであるものしか削除できない
+# このスクリプトで使用するgoogleサービスアカウントがオーナーであるファイルorディレクトリしか削除できないことに注意！
 def delete_directory_via_gdrive(remote_directory_id: str) -> None:
     cmd = f"gdrive --service-account credential.json delete -r {remote_directory_id}"
     tokens = shlex.split(cmd)
     subprocess.run(tokens)
 
 
+# ローカルにあるものをdriveにアップロードする．同じ名前のものがあれば置き換える
 def update_directory(
     local_directory_name: str, remote_parent_directory_id: str, creds
 ) -> None:
@@ -48,11 +48,13 @@ def update_directory(
     )
 
 
+# ファイルorディレクトリ名からdriveでのidを取得する．driveでは同じ場所に同じ名前のものがあってもいいので，返り値はリスト
 def file_name2ids(
     file_name: str,
     creds,
     remote_parent_directory_id: Optional[str] = None,
 ) -> List[str]:
+
     drive_service = build("drive", "v3", credentials=creds)
     query = "trashed = False"
     if remote_parent_directory_id:
@@ -78,16 +80,24 @@ def file_name2ids(
 
 def main():
     # creds, project = google.auth.default()
+    # ↑はworkload identity連携を使用する場合の書き方
+
+    # creds は google service アカウントへの認証情報
     creds = service_account.Credentials.from_service_account_file(
         GOOGLE_APPLICATION_CREDENTIALS
     )
 
+    # スコープ（権限）を設定
     scoped_creds = creds.with_scopes(SCOPES)
 
+    # 操作対象ディレクトリのidを取得
+    # サービスアカウントに対して操作したいディレクトリXを共有しておくと，
+    # そのサービスアカウントのmy drive（driveにおけるroot）にXが追加されるので，それを見に行く
     GitHub_actions_tutorial_id = file_name2ids(
         file_name="GitHub_actions_tutorial", creds=scoped_creds
     )[0]
 
+    # ローカルにあるディレクトリを指定した親ディレクトリにアップロードする．既に同じ名前のものがある場合，その中の1つを置き換える
     update_directory(
         local_directory_name="test",
         remote_parent_directory_id=GitHub_actions_tutorial_id,
