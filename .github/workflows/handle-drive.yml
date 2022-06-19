@@ -40,6 +40,7 @@ jobs:
           echo $PATH
           echo "which gdrive=$(which gdrive)"
           mkdir -p ~/.gdrive/
+          gdrive help
           cp $GOOGLE_APPLICATION_CREDENTIALS ~/.gdrive/credential.json
 
       - name: run my script
