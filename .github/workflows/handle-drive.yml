@@ -41,7 +41,8 @@ jobs:
           file $(which gdrive)
           mkdir -p ~/.gdrive/
           cp $GOOGLE_APPLICATION_CREDENTIALS ~/.gdrive/credential.json
-          gdrive help
+          ls -l $HOME/.local/bin
+          $HOME/.local/bin/gdrive help
 
 
       - name: run my script
