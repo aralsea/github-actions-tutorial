@@ -34,7 +34,7 @@ jobs:
 
       - name: setup gdrive
         run: |
-          apt install musl-dev
+          apt-get install musl-dev
           wget https://github.com/prasmussen/gdrive/releases/download/2.1.1/gdrive_2.1.1_linux_amd64.tar.gz
           mkdir -p $HOME/.local/bin
           tar -zxvf gdrive_2.1.1_linux_amd64.tar.gz -C $HOME/.local/bin
