@@ -22,13 +22,11 @@ jobs:
       - name: setup golang
         uses: actions/setup-go@v3
 
-      - id: "auth"
-        name: "Authenticate to Google Cloud"
-        uses: "google-github-actions/auth@v0"
+      - id: 'auth'
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v0'
         with:
-          # 外部から切り替えできるように secret にしてある.
-          workload_identity_provider: projects/650674712826/locations/global/workloadIdentityPools/github-actions/providers/gha-provider
-          service_account: colab-github-actions@colab-github-actions.iam.gserviceaccount.com
+          credentials_json: '${{ secrets.GOOGLE_CREDENTIALS }}'
 
       - name: setup gdrive
         run: |
