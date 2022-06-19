@@ -38,6 +38,7 @@ jobs:
           tar -zxvf gdrive_2.1.1_linux_amd64.tar.gz -C /usr/local/bin
           ls /usr/local/bin
           echo $PATH
+          /usr/local/bin/gdrive
       - name: run my script
         run: |
           echo "GITHUB_WORKSPACE=${{ github.workspace }}" >> $GITHUB_ENV
