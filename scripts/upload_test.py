@@ -127,7 +127,7 @@ def file_name2ids(
 def main():
     # creds, project = google.auth.default()
     creds = service_account.Credentials.from_service_account_file(
-        "credentials2.json"
+        GOOGLE_APPLICATION_CREDENTIALS
     )
 
     scoped_creds = creds.with_scopes(SCOPES)
